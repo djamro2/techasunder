@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="techAsunder">
+	<head>	
+		<meta charset="UTF-8">
+		<link rel="icon" type="image/png" href="/images/favicon.png">
+		
+		<!-- angular things & dependencies-->
+		<script src="/scripts/moment.min.js"></script>
+		<script src="/scripts/angular.min.js"></script>
+		<script src="/scripts/angular-resource.min.js"></script>
+		<script src="/scripts/angular-route.min.js"></script>
+		<script src="/app/services/factories.js"></script>
+		<script src="/app/directives/generalNavbar.js"></script>
+		<script src="/app/directives/footer.js"></script>
+		<script src="/app/directives/subscribeBox.js"></script>
+		<script src="/app/controllers/ArticleCtrl.js"></script>
+		<script src="/app/app.js"></script>
+		
+		<!-- angular material -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
+		<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.css">
+		
+		<!-- bootstrap and jquery -->
+		<script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+		<script src="//code.jquery.com/jquery-migrate-1.2.1.min.js"></script>
+		<link type="text/css" rel="stylesheet" href="/css/bootstrap.min.css" />
+		<script type="text/javascript" src="/scripts/bootstrap.min.js"></script>
+		<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+		
+		<!-- random dependencies -->
+		<link href='http://fonts.googleapis.com/css?family=Muli:400,400italic' rel='stylesheet' type='text/css'>
+		<link type="text/css" rel="stylesheet" href="/css/styles.css" />
+		
+		<!-- meta data -->
+		<title>TechAsunder</title>
+        <!-- <meta name="description" content="article description" />
+		<link rel="canonical" href="{{og_url}}">
+		<meta property="og:title"              content="{{ og_title }}" />
+		<meta property="og:type"               content="article" />
+		<meta property="og:image"              content="{{ og_image }}" />
+		<meta property="og:url"                content="{{ og_url }}" />
+		<meta property="og:description"        content="{{ og_description }}" />
+		<meta name="twitter:card" content="summary" />
+		<meta name="twitter:title" content="{{ og_title }}" />
+		<meta name="twitter:description" content="{{ og_description }}" />
+		<meta name="twitter:image" content="{{ og_image }}" /> -->
+	</head>
+	<body ng-controller="ArticleController">
+		<md-content class="background">
+		<div class="main-col">
+			<div class="row">
+				<div class="col-xs-12 navbar-row">
+					<nav class="navbar navbar-inverse">
+					    <div class="container-fluid">
+					    	<!-- Brand and toggle get grouped for better mobile display -->
+					    	<div class="navbar-header">
+					        	<button type="button" 
+					              		class="navbar-toggle collapsed" 
+					              		data-toggle="collapse" 
+					              		data-target="#bs-example-navbar-collapse-1">
+					        		<span class="sr-only">Toggle navigation</span>
+					        		<span class="icon-bar"></span>
+					        		<span class="icon-bar"></span>
+					        		<span class="icon-bar"></span>
+					      		</button>
+					      		<a class="navbar-brand" href="/">
+						  			<p class="navbar-brand-text">
+						  				Tech Asunder
+						  			</p>
+						  		</a>
+					    	</div>
+					
+					    	<!-- Collect the nav links, forms, and other content for toggling -->
+					    	<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					      		<ul class="nav navbar-nav">
+					        		<li><a href="/" class="cubs-red">Home<span class="sr-only">(current)</span></a></li>
+					        		<li><a href="/hardware" class="cubs-red">Hardware</a></li>
+									<li><a href="/software" class="cubs-red">Software</a></li>
+					      		</ul>
+						  		<ul class="nav navbar-nav navbar-right">
+									<li>
+										<a href="http://www.facebook.com">
+											<i class="fa fa-facebook-f fa-lg"></i>
+										</a>
+									</li>
+									<li>
+										<a href="https://twitter.com/wrigleyvllepost">
+											<i class="fa fa-twitter fa-lg"></i>	
+										</a>
+									</li>
+					  			</ul>
+					    	</div><!-- /.navbar-collapse -->
+					  	</div><!-- /.container-fluid -->
+					</nav>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-md-8 content-col">
+					<div class="content md-whiteframe-z3">		
+						This is the body of the article	
+					</div>	
+					
+					<div class="comments-box md-whiteframe-z3">
+						<h2>
+							Comments (0) 
+						</h2>
+						<div class="bold-border"></div>
+						<div ng-repeat="i in allComments">
+								<strong>
+									<p class="inline" ng-bind="i.nickname"></p>
+								</strong>
+								at: <p class="inline" ng-bind="getFormattedDate(i.date)"></p>
+								<br/>
+								<p class="comment-content" ng-bind="i.content"></p>
+							<hr/>
+						</div>
+						<div>
+							<strong>
+								Comment Nickname
+							</strong>
+							at: 4/08 1:00pm
+							<br/>
+							<p class="comment-content">
+								some comment
+							</p>
+							<hr/>
+						</div>
+						<h3>Submit a comment</h3>
+						<form 
+							name="form" 
+							class="comment-form" 
+							ng-submit="submitComment(comment)">
+							<table class="comment-table">
+								<tr class="comment-table-row">
+									<td class="comment-table-label">Nickname: </td>
+									<td>
+										<input type="text" 
+											ng-model="comment.nickname" 
+											class="comment-input" 
+											required/>
+									</td>
+								</tr>
+								<tr class="comment-table-row">
+									<td class="comment-table-label align-top">Comment: </td>
+									<td>
+										<textarea type="text" 
+											class="comment-textarea" 
+											rows="4" 
+											ng-model="comment.content" 
+											required>
+										</textarea>								
+									</td>
+								</tr>
+								<tr ng-show="commentSaved || errorMessage" class="comment-table-row">
+									<td class="comment-table-label"></td>
+									<td> 
+										<p ng-show="errorMessage" ng-bind="errorMessage" class="error"></p>
+										<p ng-show="commentSaved" class="submitted">Thanks! Your comment has been submitted</p>
+									 </td>
+								</tr>
+								<tr class="comment-table-row">
+									<td class="comment-table-label"></td>
+									<td>
+										<button type="submit">Submit Comment</button>								
+									</td>
+								</tr>
+							</table>
+						</form>
+					</div>
+					
+				</div>
+				
+				<div class="col-md-4 right-col md-whiteframe-z3">
+					<div class="right-col-content">
+					
+						<div class="tweets">
+							<!-- current height is 380, change as needed on twitter's site-->
+							<a class="twitter-timeline" data-height="380" href="https://twitter.com/TechAsunder">Tweets by TechAsunder</a> <script async src="//platform.twitter.com/widgets.js" charset="utf-8"></script>
+						</div>
+						
+						<a href="https://twitter.com/wrigleyvllepost">
+							<div class="social-media-box md-whiteframe-z3 social-twitter">
+								<i class="fa fa-twitter fa-2x" style="margin-right: 0.5em;"></i>
+								<p class="social-media-text">Follow us on Twitter</p>	
+							</div>
+						</a>
+						
+						<a href="http://www.facebook.com">
+							<div class="social-media-box md-whiteframe-z3 social-facebook">
+								<i class="fa fa-facebook-f fa-2x" style="margin-right: 0.5em;"></i>
+								<p class="social-media-text">Like us on Facebook</p>	
+							</div>
+						</a>
+						
+						<md-content layout="column" class="subscribe-box no-margin-right md-whiteframe-z3">
+			
+							<p style="margin-bottom: 0;">
+								Enter your email to get the latest tech news: 
+							</p>
+							
+							<md-input-container>
+						        <label>Email</label>
+						        <input ng-model="subscribe.email" type="text">
+						    </md-input-container>
+
+							<md-content layout="row" layout-align="center center" layout-fill>
+								<md-button flex="50" class="md-raised md-primary subscribe-button" ng-click="submitEmail(subscribe)"> 	
+									Submit 
+								</md-button>
+							</md-content>
+							
+							<p ng-show="emailSubmitted" class="subscribe-submit-message">Thank you!</p>
+							<p ng-show="isError" class="subscribe-submit-message">Sorry, there was a problem adding your email</p>
+							<p ng-show="isOverTimeLimit" class="subscribe-submit-message">you have submitted too many emails recently</p>
+						</md-content>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-animate.min.js"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular-aria.min.js"></script>
+	    <script src="https://ajax.googleapis.com/ajax/libs/angular_material/0.10.0/angular-material.min.js"></script>
+		
+		</md-content>
+	</body>
+</html>
